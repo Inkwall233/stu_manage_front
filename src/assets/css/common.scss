@@ -1,0 +1,41 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
+  background: url("~@/assets/images/main_bg.jpg") center fixed no-repeat;
+}
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+li {
+  list-style: none;
+}
+.float-right {
+  float: right;
+}
+.float-left {
+  float: left;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.container_wrap {
+  margin: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  opacity: 0.9;
+}

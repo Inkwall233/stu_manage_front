@@ -1,0 +1,44 @@
+{
+  "id": "2202883",
+  "name": "学生管理系统",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "982596",
+      "name": "图表",
+      "font_class": "tubiao",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "7638976",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "8348168",
+      "name": "用户",
+      "font_class": "yonghu1",
+      "unicode": "e725",
+      "unicode_decimal": 59173
+    },
+    {
+      "icon_id": "12813340",
+      "name": "权限",
+      "font_class": "quanxian",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "12906226",
+      "name": "学籍管理",
+      "font_class": "xuejiguanli",
+      "unicode": "e6b6",
+      "unicode_decimal": 59062
+    }
+  ]
+}
