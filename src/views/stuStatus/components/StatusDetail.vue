@@ -1,22 +1,54 @@
 <template>
   <div class="status-detail">
+    <el-table :data="tableData" border class="container_wrap">
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="studentid" label="学号" width="150">
+      </el-table-column>
+      <el-table-column prop="name" label="姓名" width="80"> </el-table-column>
+      <el-table-column prop="sex" label="性别" width="80" align="center">
+      </el-table-column>
+      <el-table-column prop="xueyuan" label="学院" width="180">
+      </el-table-column>
+      <el-table-column prop="classname" label="班级" width="180">
+      </el-table-column>
+      <el-table-column prop="birthday" label="生日" width="80">
+      </el-table-column>
+      <el-table-column prop="native_place" width="80" label="籍贯">
+      </el-table-column>
+      <el-table-column prop="stu_status" width="180" label="学籍变更原由">
+      </el-table-column>
+      <el-table-column
+        prop="change_time"
+        :formatter="dateFormat"
+        width="180"
+        label="学籍变更时间"
+      >
+      </el-table-column>
+    </el-table>
 
-    <!-- 弹窗 -->
+    <div class="pagination">
+      <Pagination
+        :pageCount="pagiDataAll"
+        @cpnPageJumpTo="currentChange"
+      ></Pagination>
+    </div>
   </div>
 </template>
 
 <script>
+import Pagination from "@/components/pagination";
 import {
-  selectallstudent,
   selectStuName,
   selectStuid,
   selectReward,
   selectPunish,
+  selectallstudentstatus,
 } from "@/api/request";
 
 export default {
   name: "StatusDetail",
   components: {
+    Pagination,
   },
   created() {
     // 获取第0页学生信息
@@ -31,8 +63,8 @@ export default {
       searchName: "",
       // 弹窗
       dialogTableVisible: { value: false },
-      dialogRewardVisible: {value: false},
-      dialogEditVisible: {value: false},
+      dialogRewardVisible: { value: false },
+      dialogEditVisible: { value: false },
       // punishData
       punishData: {},
       // 当前行学生信息
@@ -56,10 +88,10 @@ export default {
     /**
      * 数据请求
      */
-    // 1.获取学生信息
+    // 1.获取学生信息和学籍信息
     getStudentMes(page = 0) {
       // 请求
-      selectallstudent(page).then((res) => {
+      selectallstudentstatus(page).then((res) => {
         this.pagiDataAll = res.data.pageAll;
         // console.log(res);
         let result = res.data.data;
@@ -105,7 +137,12 @@ export default {
     /**
      * 操作
      */
-
+    // 对表格数据的日期进行格式化
+    dateFormat(row, column) {
+      const daterc = row[column.property];
+      const timeFormat = daterc.split('T')[0]
+      return timeFormat;
+    },
     // 分页跳转，获取学生信息
     currentChange(item) {
       // stu页面
@@ -176,8 +213,8 @@ export default {
     // 3.弹窗修改
     handleEdit(index, row) {
       console.log(row);
-      this.stuBaseInfo = row
-      this.dialogEditVisible.value = true
+      this.stuBaseInfo = row;
+      this.dialogEditVisible.value = true;
     },
     handleJoinPeople(row, id) {
       console.log(row.ac_id);
@@ -198,5 +235,4 @@ export default {
     cursor: pointer;
   }
 }
-
 </style>

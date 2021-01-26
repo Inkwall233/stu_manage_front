@@ -21,7 +21,7 @@ const routes = [
   {
     path: "/",
     redirect: "/home",
-    meta: { title: "首页", icon: "iconfont icon-quanxian" },
+    meta: { title: "首页", icon: "el-icon-s-home" },
     component: Layout,
     children: [
       {
@@ -46,6 +46,7 @@ const routes = [
       {
         path: "/student/manage",
         name: "manage",
+        bgimgurl: "https://cdn.jsdelivr.net/gh/inkwall233/imgcdn/bg-1.jpg",
         meta: { title: "学生信息管理", icon: "iconfont icon-yonghu" },
         component: () => import("../views/stuManage"),
       },
@@ -66,16 +67,15 @@ const routes = [
   {
     path: "/admin",
 
-    meta: { title: "权限管理", icon: "iconfont icon-quanxian" },
+    meta: { title: "管理员管理", icon: "el-icon-s-custom" },
     component: Layout,
     children: [
       {
         name: "admin",
         path: "/admin",
         meta: {
-          title: "权限管理",
+          title: "管理员",
           icon: "",
-          bgimgurl: `url(~@/assets/images/main_bg.webp)`,
         },
         component: () => import("../views/admin"),
       },

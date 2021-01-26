@@ -1,6 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import { setToken, getToken, removeToken } from "@/utils/auth.js";
+import { getLogin, getInfo } from "@/api/request";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -16,6 +19,12 @@ export default new Vuex.Store({
         label: "主页",
       },
     ],
+
+    isLogin: false,
+    token: getToken(),
+    username: "",
+    avatar: "",
+    position: "",
   },
   mutations: {
     changeSideBarIsOpen(state, isCollapse) {
@@ -35,7 +44,55 @@ export default new Vuex.Store({
       let result = state.tagslist.findIndex((item) => item.name === val.name);
       state.tagslist.splice(result, 1);
     },
+
+    SET_TOKEN(state, token) {
+      state.token = token;
+    },
+    SET_NAME: (state, name) => {
+      state.username = name;
+    },
+    SET_AVATAR: (state, avatar) => {
+      state.avatar = avatar;
+    },
+    SET_POSITION: (state, position) => {
+      state.position = position;
+    },
   },
-  actions: {},
+  actions: {
+    // 登录
+    login({ commit }, userPass) {
+      const { username, pass } = userPass;
+      return new Promise((resolve, reject) => {
+        getLogin({ username: username, pass: pass })
+          .then((res) => {
+            const { data } = res;
+            commit("SET_TOKEN", data.token);
+            setToken(data.token);
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    getInfo1({ commit ,state}) {
+      return new Promise((resolve, reject) => {
+        getInfo({ token: state.token })
+          .then((res) => {
+            let { data } = res;
+            commit("SET_NAME", data.nickname);
+            commit("SET_AVATAR", data.avatar);
+            commit("SET_POSITION", data.position);
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    logout() {
+      removeToken();
+    },
+  },
   modules: {},
 });

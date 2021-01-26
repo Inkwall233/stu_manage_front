@@ -1,19 +1,13 @@
-# stu_manage
+# 数据库课设——学籍管理系统
 
-## Project setup
-```
-npm install
-```
+## 前端stu_frontend
+安装依赖`npm install`
+启动项目`npm run serve`
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 后端stu_backend
+安装依赖`npm install`
+启动项目`node index.js`
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## 数据库keshe
+数据放在stu_backend文件夹下面
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

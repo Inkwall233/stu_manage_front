@@ -10,7 +10,11 @@ body {
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
     Microsoft YaHei, Arial, sans-serif;
-  background: url("~@/assets/images/main_bg.jpg") center fixed no-repeat;
+  background-image: url("~@/assets/images/main_bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100%;
 }
 html {
   height: 100%;
@@ -33,7 +37,7 @@ li {
   visibility: hidden;
 }
 .container_wrap {
-  margin: 15px;
+  margin: 10px;
   padding: 10px;
   border-radius: 5px;
   background-color: #ffffff;

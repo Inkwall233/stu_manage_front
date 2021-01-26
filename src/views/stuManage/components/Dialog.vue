@@ -103,7 +103,11 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="学院">
-          <el-select v-model="stuBaseInfo.xueyuan" placeholder="请选择">
+          <el-select
+            v-model="stuBaseInfo.xueyuan"
+            @visible-change="changeXueyuan"
+            placeholder="请选择"
+          >
             <el-option
               v-for="(item, index) in xueyuanOptions"
               :key="index"
@@ -118,7 +122,7 @@
         <el-form-item label="班级">
           <el-select
             v-model="stuBaseInfo.classname"
-            @visible-change="getClass"
+            @visible-change="changeClass"
             placeholder="请选择"
           >
             <el-option
@@ -130,6 +134,14 @@
             </el-option>
           </el-select>
           <!-- <el-input v-model="stuBaseInfo.classname"></el-input> -->
+        </el-form-item>
+        <el-form-item label="生日">
+          <el-date-picker
+            v-model="stuBaseInfo.birthday"
+            format="MM-dd"
+            placeholder="选择日期"
+          >
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="违纪情况">
           <el-input :disabled="true" value="暂不支持修改"></el-input>
@@ -148,7 +160,7 @@
 </template>
 
 <script>
-import { isExit } from "@/api/request";
+import { isExit, updateStuInfo } from "@/api/request";
 export default {
   name: "Dialog",
   data() {
@@ -217,8 +229,24 @@ export default {
         })
         .catch(() => {});
     },
-    // 根据学院，返回二级选择框
-    getClass() {
+    // 更改学院时,返回二级专业班级选择框
+    changeXueyuan() {
+      if (this.stuBaseInfo.xueyuan === "计算机科学与工程学院") {
+        this.classOptions = ["计算机科学与技术", "网络工程", "信息安全"];
+      } else if (this.stuBaseInfo.xueyuan === "艺术学院") {
+        this.classOptions = ["音乐与舞蹈学", "美术学", "设计学"];
+      } else if (this.stuBaseInfo.xueyuan === "外国语学院") {
+        this.classOptions = ["汉语国际教育", "日语", "翻译"];
+      } else if (this.stuBaseInfo.xueyuan === "信息与电气工程学院") {
+        this.classOptions = ["电气工程及其自动化", "电子信息工程", "通信工程"];
+      } else {
+        this.classOptions = ["应用化学", "化学工程与工艺", "环境工程"];
+      }
+      // 并将专业班级切换成所属学院
+      this.stuBaseInfo.classname = this.classOptions[0];
+    },
+    // 修改班级
+    changeClass() {
       if (this.stuBaseInfo.xueyuan === "计算机科学与工程学院") {
         this.classOptions = ["计算机科学与技术", "网络工程", "信息安全"];
       } else if (this.stuBaseInfo.xueyuan === "艺术学院") {
@@ -238,8 +266,18 @@ export default {
           // 判断学号是否 修改
           // 1. 未修改
           if (this.stuBaseInfo1.studentid === this.stuBaseInfo.studentid) {
-            console.log("学号未修改");
-
+            // 提交修改
+            updateStuInfo(this.stuBaseInfo)
+              .then((res) => {
+                this.$message({ message: "修改成功", type: "success" });
+                this.childClose3();
+                return true;
+              })
+              .catch((err) => {
+                this.$message.error("修改失败!");
+                this.childClose3();
+                return true;
+              });
           }
           // 2. 修改
           else {
@@ -247,14 +285,26 @@ export default {
             let stuidExit = await isExit(this.stuBaseInfo.studentid);
             //
             if (stuidExit.data.length !== 0) {
-              console.log("error submit!!学号已经存在");
+              // console.log("error submit!!学号已经存在");
+              this.$message({
+                message: "该学号在数据库中已存在",
+                type: "warning",
+              });
               return false;
-            }else {
-
+            } else {
+              updateStuInfo(this.stuBaseInfo)
+                .then((res) => {
+                  this.$message({ message: "修改成功", type: "success" });
+                  this.childClose3();
+                  return true;
+                })
+                .catch((err) => {
+                  this.$message.error("修改失败!");
+                  this.childClose3();
+                  return true;
+                });
             }
           }
-
-          alert("submit!");
           // console.log(this.stuBaseInfo);
         } else {
           console.log("error submit!!");

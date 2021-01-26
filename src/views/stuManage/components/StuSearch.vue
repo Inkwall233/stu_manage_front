@@ -23,7 +23,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button
+            >修改</el-button
           >
           <el-button
             size="mini"

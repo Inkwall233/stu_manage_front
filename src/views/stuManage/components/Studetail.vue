@@ -1,75 +1,105 @@
 <template>
   <div class="stu-detail">
     <Search @searchData="getSearchData" class="container_wrap"></Search>
-    <el-table :data="tableData" border class="container_wrap">
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="studentid" label="学号" width="150">
-      </el-table-column>
-      <el-table-column prop="name" label="姓名" width="80"> </el-table-column>
-      <el-table-column prop="sex" label="性别" width="80" align="center">
-      </el-table-column>
-      <el-table-column prop="xueyuan" label="学院" width="180">
-      </el-table-column>
-      <el-table-column prop="classname" label="班级" width="180">
-      </el-table-column>
-      <el-table-column prop="birthday" label="生日" width="80">
-      </el-table-column>
-      <el-table-column prop="native_place" width="80" label="籍贯">
-      </el-table-column>
-      
-      <el-table-column
-        prop="punishstatus"
-        label="违纪情况"
-        width="120"
-        align="center"
+    <div class="container_wrap">
+      <div class="batchOption">
+        <el-button icon="el-icon-plus" type="success" @click="newAdd($event)"
+          >新生录入</el-button
+        >
+        <el-button
+          icon="el-icon-delete"
+          type="danger"
+          @click="batchDelete($event)"
+          >删除选中</el-button
+        >
+        <el-button
+          icon="el-icon-refresh"
+          type="warning"
+          @click="refresh($event)"
+          >刷新学生表</el-button
+        >
+      </div>
+
+      <el-table
+        :data="tableData"
+        border
+        class=""
+        @selection-change="handleCurrentChange"
       >
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <span v-if="!scope.row.punishstatus">无</span>
-            <el-tag
-              v-else
-              size="medium"
-              type="warning"
-              @click="seeDetails(scope.row, scope.$index)"
-              >查看</el-tag
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column prop="studentid" label="学号" width="150">
+        </el-table-column>
+        <el-table-column prop="name" label="姓名" width="80"> </el-table-column>
+        <el-table-column prop="sex" label="性别" width="80" align="center">
+        </el-table-column>
+        <el-table-column prop="xueyuan" label="学院" width="180">
+        </el-table-column>
+        <el-table-column prop="classname" label="班级" width="150">
+        </el-table-column>
+        <el-table-column prop="birthday" label="生日" width="80">
+        </el-table-column>
+        <el-table-column prop="native_place" width="80" label="籍贯">
+        </el-table-column>
+
+        <el-table-column
+          prop="punishstatus"
+          label="违纪情况"
+          width="120"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <div slot="reference" class="name-wrapper">
+              <span v-if="!scope.row.punishstatus">无</span>
+              <el-tag
+                v-else
+                size="medium"
+                type="warning"
+                @click="seeDetails(scope.row, scope.$index)"
+                >查看</el-tag
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="rewardstatus"
+          label="获奖记录"
+          width="120"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <div slot="reference" class="name-wrapper">
+              <span v-if="!scope.row.rewardstatus">无</span>
+              <el-tag
+                v-else
+                size="medium"
+                type="success"
+                @click="seeDetailsReward(scope.row, scope.$index)"
+                >查看</el-tag
+              >
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.$index, scope.row)"
+              >修改</el-button
             >
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="rewardstatus"
-        label="获奖记录"
-        width="120"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <span v-if="!scope.row.rewardstatus">无</span>
-            <el-tag
-              v-else
-              size="medium"
-              type="success"
-              @click="seeDetailsReward(scope.row, scope.$index)"
-              >查看</el-tag
+            <el-button
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
             >
-          </div>
-        </template>
-      </el-table-column>
-      
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
     <div class="pagination">
       <Pagination
         :pageCount="pagiDataAll"
@@ -95,6 +125,7 @@ import {
   selectStuid,
   selectReward,
   selectPunish,
+  deleteStu,
 } from "@/api/request";
 import Search from "@/components/search/Search.vue";
 import Pagination from "@/components/pagination";
@@ -120,12 +151,14 @@ export default {
       searchName: "",
       // 弹窗
       dialogTableVisible: { value: false },
-      dialogRewardVisible: {value: false},
-      dialogEditVisible: {value: false},
+      dialogRewardVisible: { value: false },
+      dialogEditVisible: { value: false },
       // punishData
       punishData: {},
       // 当前行学生信息
       stuBaseInfo: {},
+      // 选中的项
+      selectedData: [],
     };
   },
 
@@ -138,10 +171,6 @@ export default {
     },
   },
   methods: {
-    handleDelete(index, row) {
-      console.log(index, row);
-    },
-
     /**
      * 数据请求
      */
@@ -265,19 +294,97 @@ export default {
     // 3.弹窗修改
     handleEdit(index, row) {
       console.log(row);
-      this.stuBaseInfo = row
-      this.dialogEditVisible.value = true
+      this.stuBaseInfo = row;
+      this.dialogEditVisible.value = true;
     },
-    handleJoinPeople(row, id) {
-      console.log(row.ac_id);
+    // 删除学生信息
+    handleDelete(index, row) {
+      this.$confirm("确认删除？")
+        .then(() => {
+          console.log(index, row);
+          deleteStu(row)
+            .then(() => {
+              this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+            })
+            .catch((err) => {
+              this.$message.error("删除失败!");
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
-    handleCard(row, id) {
-      console.log(row.ac_id);
+    handleCurrentChange(rows) {
+      console.log(rows);
+      //将选中赋值到回显和传参数组
+      // this.templateRadio = rows;
+      this.selectedData = [];
+      if (rows) {
+        rows.forEach((row) => {
+          if (row) {
+            this.selectedData.push(row);
+          }
+        });
+      }
+    },
+    // 新增添加
+    newAdd(event) {
+      this.lostBlur(event);
+      this.handleEdit();
+    },
+    // 全选删除
+    batchDelete(event) {
+      this.lostBlur(event);
+      this.$confirm("确认删除选中？")
+        .then(() => {
+          this.selectedData.forEach(async (item, index) => {
+            await deleteStu(item);
+            this.$message({
+              type: "info",
+              message: "第" + index + 1 + "条记录，删除成功!",
+            });
+          });
+          this.$message({
+            type: "success",
+            message: "全部删除成功!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除选中",
+          });
+        });
+    },
+    refresh(event) {
+      this.lostBlur(event);
+      this.getStudentMes();
+    },
+    // element button自动失焦
+    lostBlur(event) {
+      let target = event.target;
+      if (target.nodeName == "SPAN") {
+        target = event.target.parentNode;
+      }
+      target.blur();
     },
   },
 };
 </script>
 <style lang='scss' scoped>
+.batchOption {
+  margin-bottom: 5px;
+  .el-button {
+    font-size: 10px;
+    padding: 5px;
+  }
+}
 .pagination {
   text-align: center;
   margin-top: 15px;
@@ -287,5 +394,4 @@ export default {
     cursor: pointer;
   }
 }
-
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="welcome container_wrap">
     <span>现在是 {{ time }} ， 欢迎你！</span>
-    <span class="wel-user">某某</span>
+    <span class="wel-user">{{$store.state.username}}</span>
   </div>
 </template>
 
