@@ -3,11 +3,18 @@
 ## 前端stu_frontend
 项目地址[https://github.com/Inkwall233/stu_manage_front](https://github.com/Inkwall233/stu_manage_front)
 
+### 环境
+安装nodejs
+
 安装依赖
 `npm install`
 
 启动项目
 `npm run serve`
+
+更改了可以无后端和MySQL直接预览项目，实际上是把登录和获取用户信息网络请求关了
+
+当后端和MySQL搭建好，在src/store/index.js，把getLogin和getInfo函数注释的打开
 
 ## 后端stu_backend
 项目地址[https://github.com/Inkwall233/stu_manage_back](https://github.com/Inkwall233/stu_manage_back)
